@@ -1,0 +1,21 @@
+{
+    "name": "lucasaba/php-pec",
+    "description": "A php library to manage certified electronic mail (RFC 6109 - PEC)",
+    "keywords": ["email","pec","rfc6109"],
+    "homepage": "http://github.com/lucasaba/php-pec",
+    "type": "library",
+    "require": {
+        "php": ">=5.3.0",
+        "tedivm/fetch": "^0.7.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luca Saba",
+            "email": "lucasaba@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {"PhpPec": "src/"}
+    }
+}
