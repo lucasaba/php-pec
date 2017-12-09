@@ -15,7 +15,7 @@
  * Time: 15.14
  */
 
-namespace PhpPEC\PecMessage;
+namespace PhpPec;
 use Fetch\Attachment;
 
 
@@ -105,4 +105,19 @@ interface PecMessageInterface
      * @return string|null
      */
     function getIdMessaggioDiRiferimento();
+
+    /**
+     * Restituisce il trasporto della busta pec che contiene il messaggio
+     * originale.
+     *
+     * In pratica il campo X-Trasporto
+     *
+     * I possibili valori sono:
+     *
+     * - posta-certificata
+     * - errore
+     *
+     * @return string|null
+     */
+    function getTrasporto();
 }

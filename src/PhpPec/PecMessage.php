@@ -15,7 +15,7 @@
  * Time: 15.10
  */
 
-namespace PhpPEC\PecMessage;
+namespace PhpPec;
 
 use Fetch\Attachment;
 use Fetch\Message;
@@ -32,9 +32,25 @@ use Fetch\Server;
  */
 class PecMessage extends Message implements PecMessageInterface
 {
+    /**
+     * @var string|null
+     */
     private $ricevuta;
+
+    /**
+     * @var string|null
+     */
     private $tipoRicevuta;
+
+    /**
+     * @var string|null
+     */
     private $idMessaggioDiRiferimento;
+
+    /**
+     * @var string|null
+     */
+    private $trasporto;
 
     public function __construct($messageUniqueId, Server $connection)
     {
@@ -46,7 +62,7 @@ class PecMessage extends Message implements PecMessageInterface
          */
         $regex = '/X-Ricevuta: (non-accettazione|accettazione|preavviso-errore-consegna|presa-in-carico|rilevazione-virus|errore-consegna|avvenuta-consegna)/';
         if(preg_match($regex, $rawHeaders, $match) > 0) {
-            $this->ricevuta = $match[0];
+            $this->ricevuta = $match[1];
         }
 
         /**
@@ -54,7 +70,7 @@ class PecMessage extends Message implements PecMessageInterface
          */
         $regex = '/X-TipoRicevuta: (completa|breve|sintetica)/';
         if(preg_match($regex, $rawHeaders, $match) > 0) {
-            $this->tipoRicevuta = $match[0];
+            $this->tipoRicevuta = $match[1];
         }
 
         /**
@@ -62,7 +78,7 @@ class PecMessage extends Message implements PecMessageInterface
          */
         $regex = '/X-Trasporto: (posta-certificata|errore)/';
         if(preg_match($regex, $rawHeaders, $match) > 0) {
-            $this->tipoRicevuta = $match[0];
+            $this->trasporto = $match[1];
         }
 
         /**
@@ -70,8 +86,14 @@ class PecMessage extends Message implements PecMessageInterface
          */
         $regex = '/X-Riferimento-Message-ID: (<\S+>)/';
         if(preg_match($regex, $rawHeaders, $match) > 0) {
-            $this->idMessaggioDiRiferimento = $match[0];
+            $this->idMessaggioDiRiferimento = $match[1];
         }
+    }
+
+
+    public function getOggetto()
+    {
+
     }
 
     /**
@@ -165,5 +187,23 @@ class PecMessage extends Message implements PecMessageInterface
     function getIdMessaggioDiRiferimento()
     {
         return $this->idMessaggioDiRiferimento;
+    }
+
+    /**
+     * Restituisce il trasporto della busta pec che contiene il messaggio
+     * originale.
+     *
+     * In pratica il campo X-Trasporto
+     *
+     * I possibili valori sono:
+     *
+     * - posta-certificata
+     * - errore
+     *
+     * @return string|null
+     */
+    function getTrasporto()
+    {
+        return $this->trasporto;
     }
 }
