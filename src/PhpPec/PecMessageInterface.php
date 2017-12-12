@@ -41,10 +41,9 @@ interface PecMessageInterface
      *
      * Questa funzione deve restituire il reale mittente della mail
      *
-     * @param bool $formatoString
      * @return array|string|bool
      */
-    function realeMittente($formatoString = false);
+    function realeMittente();
 
     /**
      * Il messaggio originale è contenuto in un allegato della busta PEC.

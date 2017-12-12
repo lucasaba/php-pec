@@ -29,6 +29,40 @@ use Fetch\Server;
  */
 class PecServer extends Server
 {
+    /**
+     * I messaggi di PEC in ingresso hanno tutti l'oggetto nel formato:
+     *
+     * POSTA CERTIFICATA: [original subject]
+     *
+     * Quindi, se voglio solo la posta in ingresso e non le ricevute,
+     * mi basta selezionare i soli messaggi con questo particolare soggetto
+     *
+     * @return array
+     */
+    public function recuperaPecInIngresso()
+    {
+        if ($results = imap_search($this->getImapStream(), 'SUBJECT "POSTA CERTIFICATA: "', SE_UID)) {
+            if (isset($limit) && count($results) > $limit)
+                $results = array_slice($results, 0, $limit);
+
+            $messages = array();
+
+            foreach ($results as $messageId)
+                $messages[] = new PecMessage($messageId, $this);
+
+            return $messages;
+        } else {
+            return array();
+        }
+    }
+
+    /**
+     * Fa l'overload del metodo padre per restituire una array
+     * di oggetti PecMessage invece di Fetch\Message
+     *
+     * @param null $limit
+     * @return array
+     */
     public function getMessages($limit = null)
     {
         $numMessages = $this->numMessages();

@@ -93,7 +93,7 @@ class PecMessage extends Message implements PecMessageInterface
 
     public function getOggetto()
     {
-
+        return str_replace('POSTA CERTIFICATA: ', '', $this->getSubject());
     }
 
     /**
@@ -106,12 +106,32 @@ class PecMessage extends Message implements PecMessageInterface
      *
      * Questa funzione deve restituire il reale mittente della mail
      *
-     * @param bool $formatoString
      * @return array|string|bool
      */
-    function realeMittente($formatoString = false)
+    function realeMittente()
     {
-        // TODO: Implement realeMittente() method.
+        $mittente = $this->getAddresses('from');
+        /**
+         * Se si tratta di una pec in ingresso,
+         * devo trattare il campo from come sopra descritto
+         */
+        if($this->getTrasporto()) {
+            if(is_array($mittente) && count($mittente) > 0) {
+                preg_match('/Per conto di: ([\w-.]+@[\w.-]+)/', $mittente['name'], $match);
+                if(count($match) == 2) {
+                    return $match[1];
+                }
+                return $mittente['name'];
+            }
+        } else {
+            /**
+             * Si tratta di una ricevuta. Quindi il campo from è un campo regolare con
+             * i dati del provider PEC
+             */
+            return $mittente['address'];
+        }
+
+        return false;
     }
 
     /**
