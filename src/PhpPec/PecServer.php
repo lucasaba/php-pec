@@ -82,4 +82,21 @@ class PecServer extends Server
 
         return $messages;
     }
+
+    /**
+     * Returns the requested email or false if it is not found.
+     *
+     * @param  int          $uid
+     * @return PecMessage|bool
+     */
+    public function getMessageByUid($uid)
+    {
+        try {
+            $message = new PecMessage($uid, $this);
+
+            return $message;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
