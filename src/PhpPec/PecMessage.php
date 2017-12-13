@@ -241,4 +241,90 @@ class PecMessage extends Message implements PecMessageInterface
     {
         return $this->trasporto;
     }
+
+    /**
+     * La funzione originale non tiene conto del problema delle email che contengono
+     * altre email.
+     *
+     * Allo stato attuale la soluzione è già stata proposta (https://github.com/tedious/Fetch/pull/201)
+     * ma non ancora mergiata.
+     *
+     * This function takes in a structure and identifier and processes that part of the message. If that portion of the
+     * message has its own subparts, those are recursively processed using this function.
+     *
+     * @param \stdClass $structure
+     * @param string    $partIdentifier
+     */
+    protected function processStructure($structure, $partIdentifier = null)
+    {
+        $parameters = self::getParametersFromStructure($structure);
+
+        if ((isset($parameters['name']) || isset($parameters['filename']))
+            || (isset($structure->subtype) && strtolower($structure->subtype) == 'rfc822')
+        ) {
+            $attachment          = new Attachment($this, $structure, $partIdentifier);
+            $this->attachments[] = $attachment;
+        } elseif ($structure->type == 0 || $structure->type == 1) {
+            $messageBody = isset($partIdentifier) ?
+                imap_fetchbody($this->imapStream, $this->uid, $partIdentifier, FT_UID | FT_PEEK)
+                : imap_body($this->imapStream, $this->uid, FT_UID | FT_PEEK);
+
+            $messageBody = self::decode($messageBody, $structure->encoding);
+
+            if (!empty($parameters['charset']) && $parameters['charset'] !== self::$charset) {
+                $mb_converted = false;
+                if (function_exists('mb_convert_encoding')) {
+                    if (!in_array($parameters['charset'], mb_list_encodings())) {
+                        if ($structure->encoding === 0) {
+                            $parameters['charset'] = 'US-ASCII';
+                        } else {
+                            $parameters['charset'] = 'UTF-8';
+                        }
+                    }
+
+                    $messageBody = @mb_convert_encoding($messageBody, self::$charset, $parameters['charset']);
+                    $mb_converted = true;
+                }
+                if (!$mb_converted) {
+                    $messageBodyConv = @iconv($parameters['charset'], self::$charset . self::$charsetFlag, $messageBody);
+
+                    if ($messageBodyConv !== false) {
+                        $messageBody = $messageBodyConv;
+                    }
+                }
+            }
+
+            if (strtolower($structure->subtype) === 'plain' || ($structure->type == 1 && strtolower($structure->subtype) !== 'alternative')) {
+                if (isset($this->plaintextMessage)) {
+                    $this->plaintextMessage .= PHP_EOL . PHP_EOL;
+                } else {
+                    $this->plaintextMessage = '';
+                }
+
+                $this->plaintextMessage .= trim($messageBody);
+            } elseif (strtolower($structure->subtype) === 'html') {
+                if (isset($this->htmlMessage)) {
+                    $this->htmlMessage .= '<br><br>';
+                } else {
+                    $this->htmlMessage = '';
+                }
+
+                $this->htmlMessage .= $messageBody;
+            }
+        }
+
+        if (! empty($structure->parts)) {
+            if (isset($structure->subtype) && strtolower($structure->subtype) === 'rfc822') {
+                $this->processStructure($structure->parts[0], $partIdentifier);
+            } else {
+                // multipart: iterate through each part
+                foreach ($structure->parts as $partIndex => $part) {
+                    $partId = $partIndex + 1;
+                    if (isset($partIdentifier))
+                        $partId = $partIdentifier . '.' . $partId;
+                    $this->processStructure($part, $partId);
+                }
+            }
+        }
+    }
 }
