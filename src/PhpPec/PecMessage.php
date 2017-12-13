@@ -225,6 +225,16 @@ class PecMessage extends Message implements PecMessageInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getDataMessaggio()
+    {
+        $data = new \DateTime();
+        date_timestamp_set($data, $this->getDate());
+        return $data;
+    }
+
+    /**
      * Restituisce il trasporto della busta pec che contiene il messaggio
      * originale.
      *
