@@ -20,6 +20,7 @@ namespace PhpPec;
 use Fetch\Attachment;
 use Fetch\Message;
 use Fetch\Server;
+use PhpPec\Parser\PostacertParser;
 
 /**
  * Class PecMessage
@@ -32,6 +33,8 @@ use Fetch\Server;
  */
 class PecMessage extends Message implements PecMessageInterface
 {
+    private $allegatiDiServizio = ['daticert.xml', 'smime.p7s', 'postacert.eml'];
+
     /**
      * @var string|null
      */
@@ -136,14 +139,19 @@ class PecMessage extends Message implements PecMessageInterface
 
     /**
      * Il messaggio originale è contenuto in un allegato della busta PEC.
-     * Questa funzione dovrebbe restituirne il contenuto
+     * Questa funzione dovrebbe restituirne il contenuto.
+     * Gli allegati sono contenuti direttamente nella busta, quindi non
+     * è necessario estrarli dal messaggio originale
      *
      * @param bool $inHtml Se true, il metodo tenta di restituire la versione HTML del messagio
-     * @return null|string
+     * @return null|array
      */
-    function getTestoOriginale($inHtml = false)
+    function getTestiOriginali($inHtml = false)
     {
-        // TODO: Implement getTestoOriginale() method.
+        $postacert = $this->getAttachments('postacert.eml');
+        /* @var Attachment $postacert */
+        $parser = new PostacertParser($postacert->getData());
+        return $parser->getFragments();
     }
 
     /**
@@ -158,7 +166,14 @@ class PecMessage extends Message implements PecMessageInterface
      */
     function getAllegati()
     {
-        // TODO: Implement getAllegati() method.
+        $allegati = array();
+        foreach ($this->getAttachments() as $attachment) {
+            if(! in_array($attachment->getFileName(), $this->allegatiDiServizio)) {
+                $allegati[] = $attachment;
+            }
+        }
+
+        return $allegati;
     }
 
     /**

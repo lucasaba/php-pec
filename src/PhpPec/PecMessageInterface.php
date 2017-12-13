@@ -50,9 +50,9 @@ interface PecMessageInterface
      * Questa funzione dovrebbe restituirne il contenuto
      *
      * @param bool $inHtml Se true, il metodo tenta di restituire la versione HTML del messagio
-     * @return null|string
+     * @return null|array
      */
-    function getTestoOriginale($inHtml = false);
+    function getTestiOriginali($inHtml = false);
 
     /**
      * Restituisce gli allegati originali
