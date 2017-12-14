@@ -119,4 +119,14 @@ interface PecMessageInterface
      * @return string|null
      */
     function getTrasporto();
+
+    /**
+     * Verifica la firma della PEC
+     * La PEC contiene la firma all'interno di smime.p7s
+     * relativa a postacert.eml
+     * I dati relativi al provider sono in daticert.xml
+     *
+     * @return boolean
+     */
+    function verificaPec();
 }

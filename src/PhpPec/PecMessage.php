@@ -253,6 +253,24 @@ class PecMessage extends Message implements PecMessageInterface
     }
 
     /**
+     * Verifica la firma della PEC
+     *
+     * @return boolean
+     */
+    function verificaPec()
+    {
+        $nonce = md5(time().rand(10000, 99999));
+        $msg = imap_fetchbody($this->imapStream, $this->uid, '', FT_UID | FT_PEEK);
+
+        file_put_contents("/tmp/pec-message.$nonce", $msg);
+
+        $result = openssl_pkcs7_verify("/tmp/pec-message.$nonce", 0);
+
+        unlink("/tmp/pec-message.$nonce");
+        return $result;
+    }
+
+    /**
      * La funzione originale non tiene conto del problema delle email che contengono
      * altre email.
      *
