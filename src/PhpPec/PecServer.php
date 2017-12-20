@@ -39,16 +39,17 @@ class PecServer extends Server
      *
      * @return array
      */
-    public function recuperaPecInIngresso()
+    public function recuperaPecInIngresso($filtro = 'SUBJECT "POSTA CERTIFICATA: "')
     {
-        if ($results = imap_search($this->getImapStream(), 'SUBJECT "POSTA CERTIFICATA: "', SE_UID)) {
+        if ($results = imap_search($this->getImapStream(), $filtro, SE_UID)) {
             if (isset($limit) && count($results) > $limit)
                 $results = array_slice($results, 0, $limit);
 
             $messages = array();
 
-            foreach ($results as $messageId)
+            foreach ($results as $messageId) {
                 $messages[] = new PecMessage($messageId, $this);
+            }
 
             return $messages;
         } else {
