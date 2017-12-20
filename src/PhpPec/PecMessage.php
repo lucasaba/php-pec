@@ -55,9 +55,12 @@ class PecMessage extends Message implements PecMessageInterface
      */
     private $trasporto;
 
+    private $rawBody;
+
     public function __construct($messageUniqueId, Server $connection)
     {
         parent::__construct($messageUniqueId, $connection);
+        $this->rawBody = null;
         $rawHeaders = $this->getRawHeaders();
 
         /**
@@ -260,7 +263,7 @@ class PecMessage extends Message implements PecMessageInterface
     function verificaPec()
     {
         $nonce = md5(time().rand(10000, 99999));
-        $msg = imap_fetchbody($this->imapStream, $this->uid, '', FT_UID | FT_PEEK);
+        $msg = $this->getRawBody();
 
         file_put_contents("/tmp/pec-message.$nonce", $msg);
 
@@ -268,6 +271,26 @@ class PecMessage extends Message implements PecMessageInterface
 
         unlink("/tmp/pec-message.$nonce");
         return $result;
+    }
+
+    function getIdMessaggio()
+    {
+        $headers = $this->getHeaders();
+        if(isset($headers->message_id)) {
+            return $headers->message_id;
+        }
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    function getRawBody()
+    {
+        if($this->rawBody == null) {
+            $this->rawBody = imap_fetchbody($this->imapStream, $this->uid, '', FT_UID | FT_PEEK);
+        }
+        return $this->rawBody;
     }
 
     /**
