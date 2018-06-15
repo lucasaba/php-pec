@@ -150,7 +150,7 @@ class PostacertParser
                 preg_match('/Content-Transfer-Encoding: (\w+)/', $parteMessaggio, $encoding);
                 if(count($encoding) > 0) {
                     // Elimino l'intestazione della parte del messaggio
-                    $parteMessaggio = trim(preg_replace('/^Content[\w-\s:\/;=]+\n\n/', '', $parteMessaggio));
+                    $parteMessaggio = trim(preg_replace('/Content[^\n]*/', '', $parteMessaggio));
                     switch (strtolower($encoding[1])) {
                         case 'base64':
                             $parteMessaggio = base64_decode($parteMessaggio);
