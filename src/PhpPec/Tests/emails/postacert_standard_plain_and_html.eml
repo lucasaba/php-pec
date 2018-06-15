@@ -1,0 +1,35 @@
+Received: from example.server.com (unknown [192.168.10.10])
+	by smtps.example.it (Postfix) with ESMTPSA id 87y87ab87gh
+	for <PECUSER@PEC.EXAMPLE.IT>; Mon,  1 Jan 1970 01:00:01 +0200 (CEST)
+From: Original sender <original.sende@pec.example.server.com>
+To: PECUSER@PEC.EXAMPLE.IT
+Subject: Test message
+ with attachment
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_1111111111111111111111111111111"
+Date: Mon,  5 Jun 2017 16:56:38 +0200 (CEST)
+Message-ID: <opec_messageid@pec.example.server.com>
+X-Riferimento-Message-ID: <222222222222222222222.JavaMail.root@drlinux0c.pec.example.server.com>
+
+------=_Part_1111111111111111111111111111111
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<p>Testo libero contenente HTML</p>
+------=_Part_1111111111111111111111111111111
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Testo libero
+------=_Part_1111111111111111111111111111111
+Content-Type: application/octet-stream; 
+	name=test.pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; 
+	filename=test.pdf
+
+JVBERi0xLjQNCiXi48/TDQolNy4xMDJhMzcgKDkxNzQpICAgICANCg0KMSAwIG9iag0KPDwNCiAv
+ZWYKNjI0MTA0CiUlRU9GCg==
+------=_Part_1111111111111111111111111111111--
+
