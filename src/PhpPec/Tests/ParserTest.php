@@ -47,7 +47,7 @@ class ParserTest extends TestCase
         $this->assertEquals('<p>Testo libero contenente HTML</p>', $fragments[0]['contenuto']);
         $this->assertEquals('html', $fragments[0]['tipo']);
 
-        $this->assertEquals('Testo libero', $fragments[1]['contenuto']);
+        $this->assertEquals('Contento del Testo libero', $fragments[1]['contenuto']);
         $this->assertEquals('plain', $fragments[1]['tipo']);
     }
 
