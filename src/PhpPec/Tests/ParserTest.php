@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Goutte package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpPec\Tests;
 
 use PhpPec\Parser\PostacertParser;
@@ -16,9 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * PhpPec Test.
- *
- * @author Michael Dowling <michael@guzzlephp.org>
- * @author Charles Sarrazin <charles@sarraz.in>
  */
 class ParserTest extends TestCase
 {
