@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/lucasaba/php-pec.svg?branch=master)](https://travis-ci.org/lucasaba/php-pec)
+
 # PHP PEC
 
 Librearia per semplificare la gestione della posta elettronica certificata
