@@ -56,7 +56,7 @@ class ParserTest extends TestCase
         $parser = $this->getParser('postacert_standard_newline.eml');
         $fragments = $parser->getFragments();
 
-        $this->assertEquals('', $fragments[0]['contenuto']);
+        $this->assertEquals("Contenti di provare\n\nTesto libero plain\n\nContenente diverse\nlinee con\n\n\nDoppio a capo\n\nProva", $fragments[0]['contenuto']);
         $this->assertEquals('plain', $fragments[0]['tipo']);
     }
 }
