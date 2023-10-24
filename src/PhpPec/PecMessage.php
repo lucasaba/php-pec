@@ -123,7 +123,7 @@ class PecMessage extends Message implements PecMessageInterface
          */
         if($this->getTrasporto()) {
             if(is_array($mittente) && count($mittente) > 0) {
-                preg_match('/Per conto di: ([\w-.]+@[\w.-]+)/', $mittente['name'], $match);
+                preg_match('/Per conto di: ([\w\-.]+@[\w.\-]+)/', $mittente['name'], $match);
                 if(count($match) == 2) {
                     return $match[1];
                 }
