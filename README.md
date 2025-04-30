@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/lucasaba/php-pec.svg?branch=master)](https://travis-ci.org/lucasaba/php-pec)
+# Deprecated
+
+Questa libreria è da considerarsi deprecata e il suo codice non più manutenuto.
 
 # PHP PEC
 
